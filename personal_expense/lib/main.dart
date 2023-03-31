@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:personal_expense/widgets/new_transaction.dart';
 import './models/transaction.dart';
 import './widgets/transaction_list.dart';
+import './widgets/chart.dart';
 
 void main() => runApp(MyApp());
 
@@ -12,8 +13,6 @@ class MyApp extends StatelessWidget {
       title: 'Flutter App',
       home: MyHomePage(),
       theme: ThemeData(
-          primarySwatch: Colors.pink,
-          accentColor: Colors.pinkAccent,
           appBarTheme: const AppBarTheme(
               titleTextStyle: TextStyle(
             fontFamily: 'OpenSans',
@@ -21,11 +20,13 @@ class MyApp extends StatelessWidget {
             fontWeight: FontWeight.bold,
           )),
           textTheme: const TextTheme(
-              headline6: TextStyle(
+              titleLarge: TextStyle(
             fontFamily: 'OpenSans',
             fontSize: 20,
             fontWeight: FontWeight.normal,
-          ))),
+          )),
+          colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.pink)
+              .copyWith(secondary: Colors.pinkAccent)),
     );
   }
 }
@@ -63,10 +64,10 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Flutter App'),
+        title: const Text('Flutter App'),
         actions: <Widget>[
           IconButton(
-            icon: Icon(
+            icon: const Icon(
               Icons.add,
             ),
             onPressed: () {},
@@ -78,18 +79,13 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            Container(
-              child: Card(
-                color: Theme.of(context).primaryColor,
-                child: Text('CHART'),
-              ),
-            ),
+            Chart(transactionsList),
             TransactionList(transactionsList),
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        child: Icon(
+        child: const Icon(
           Icons.add,
         ),
         onPressed: () {
