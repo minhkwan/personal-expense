@@ -4,8 +4,9 @@ import 'package:intl/intl.dart';
 
 class TransactionList extends StatelessWidget {
   final List<Transaction> transactionsList;
+  final Function deleteTrans;
 
-  TransactionList(this.transactionsList);
+  const TransactionList(this.transactionsList, this.deleteTrans);
 
   @override
   Widget build(BuildContext context) {
@@ -14,46 +15,37 @@ class TransactionList extends StatelessWidget {
       child: ListView.builder(
         itemBuilder: (context, index) {
           return Card(
-              child: Row(
-            children: <Widget>[
-              Container(
-                margin: const EdgeInsets.symmetric(
-                  vertical: 10,
-                  horizontal: 15,
-                ),
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    color: Theme.of(context).primaryColor,
-                    width: 2,
-                  ),
-                ),
-                padding: const EdgeInsets.all(10),
-                child: Text(
-                  '\$${transactionsList[index].amount.toStringAsFixed(2)}',
-                  style: TextStyle(
-                    color: Theme.of(context).primaryColor,
-                    fontSize: 15,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
+            elevation: 5,
+            margin: const EdgeInsets.symmetric(
+              horizontal: 10,
+              vertical: 5,
+            ),
+            child: ListTile(
+              leading: CircleAvatar(
+                radius: 30,
+                child: FittedBox(
+                    child: Padding(
+                        padding: const EdgeInsets.all(10),
+                        child: Text('\$${transactionsList[index].amount}'))),
               ),
-              Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      transactionsList[index].title,
-                      style: Theme.of(context).textTheme.headline6,
-                    ),
-                    Text(
-                      DateFormat.yMMMMEEEEd()
-                          .format(transactionsList[index].date),
-                      style: TextStyle(
-                        color: Theme.of(context).primaryColor,
-                      ),
-                    ),
-                  ])
-            ],
-          ));
+              title: Text(
+                transactionsList[index].title,
+                style: Theme.of(context).textTheme.titleLarge,
+              ),
+              subtitle: Text(
+                DateFormat('yyyy-MM-dd').format(transactionsList[index].date),
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+              trailing: IconButton(
+                icon: const Icon(
+                  Icons.delete,
+                ),
+                onPressed: () {
+                  deleteTrans(index);
+                },
+              ),
+            ),
+          );
         },
         itemCount: transactionsList.length,
       ),

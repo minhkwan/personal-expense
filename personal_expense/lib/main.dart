@@ -21,9 +21,9 @@ class MyApp extends StatelessWidget {
           )),
           textTheme: const TextTheme(
               titleLarge: TextStyle(
-            fontFamily: 'OpenSans',
+            fontFamily: 'Quicksand',
             fontSize: 20,
-            fontWeight: FontWeight.normal,
+            fontWeight: FontWeight.w500,
           )),
           colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.pink)
               .copyWith(secondary: Colors.pinkAccent)),
@@ -48,6 +48,12 @@ class _MyHomePageState extends State<MyHomePage> {
     );
     setState(() {
       transactionsList.add(newTx);
+    });
+  }
+
+  void deleteTransaction(int index) {
+    setState(() {
+      transactionsList.removeAt(index);
     });
   }
 
@@ -80,7 +86,7 @@ class _MyHomePageState extends State<MyHomePage> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             Chart(transactionsList),
-            TransactionList(transactionsList),
+            TransactionList(transactionsList, deleteTransaction),
           ],
         ),
       ),
