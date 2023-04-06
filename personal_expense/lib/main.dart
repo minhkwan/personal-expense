@@ -39,16 +39,24 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   final List<Transaction> transactionsList = [];
 
-  void createNewTrans(String title, double amount) {
+  void createNewTrans(String title, double amount, DateTime chosenDate) {
     final newTx = Transaction(
       id: DateTime.now().toString(),
       title: title,
       amount: amount,
-      date: DateTime.now(),
+      date: chosenDate,
     );
     setState(() {
       transactionsList.add(newTx);
     });
+  }
+
+  void pickDate(BuildContext context) {
+    showDatePicker(
+        context: context,
+        initialDate: DateTime.now(),
+        firstDate: DateTime(DateTime.now().year),
+        lastDate: DateTime.now());
   }
 
   void deleteTransaction(int index) {

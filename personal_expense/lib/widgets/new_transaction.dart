@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class NewTransaction extends StatefulWidget {
   late final Function createTrans;
@@ -14,9 +15,29 @@ class _NewTransactionState extends State<NewTransaction> {
 
   final amountController = TextEditingController();
 
+  String pickedDate = 'No date chosen';
+
+  void pickDate() {
+    showDatePicker(
+            context: context,
+            initialDate: DateTime.now(),
+            firstDate: DateTime(2021),
+            lastDate: DateTime.now())
+        .then((value) {
+      if (value == null) {
+        return;
+      }
+      setState(() {
+        pickedDate = DateFormat.yMd().format(value);
+      });
+    });
+  }
+
   void submitData() {
     widget.createTrans(
-        titleController.text, double.parse(amountController.text));
+        titleController.text,
+        double.parse(amountController.text),
+        DateFormat.yMd().parse(pickedDate));
     Navigator.pop(context);
   }
 
@@ -46,6 +67,15 @@ class _NewTransactionState extends State<NewTransaction> {
               onPressed: submitData,
               child: const Text('Add Transaction'),
             ),
+            Row(
+              children: [
+                Text(pickedDate,
+                    style: Theme.of(context).textTheme.titleMedium),
+                IconButton(
+                    onPressed: pickDate,
+                    icon: const Icon(Icons.edit_calendar_rounded)),
+              ],
+            )
           ],
         ),
       ),
