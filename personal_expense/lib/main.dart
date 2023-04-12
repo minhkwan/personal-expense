@@ -37,6 +37,8 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  var showChart = false;
+
   final List<Transaction> transactionsList = [];
 
   void createNewTrans(String title, double amount, DateTime chosenDate) {
@@ -76,25 +78,66 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Flutter App'),
-        actions: <Widget>[
-          IconButton(
-            icon: const Icon(
-              Icons.add,
-            ),
-            onPressed: () {},
+    final isLandscape =
+        MediaQuery.of(context).orientation == Orientation.landscape;
+
+    final appBar = AppBar(
+      title: const Text('Flutter App'),
+      actions: <Widget>[
+        IconButton(
+          icon: const Icon(
+            Icons.add,
           ),
-        ],
-      ),
+          onPressed: () {},
+        ),
+      ],
+    );
+
+    final transactionWidget = Container(
+        height: (MediaQuery.of(context).size.height -
+                appBar.preferredSize.height -
+                MediaQuery.of(context).padding.top) *
+            0.7,
+        child: TransactionList(transactionsList, deleteTransaction));
+    return Scaffold(
+      appBar: appBar,
       body: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            Chart(transactionsList),
-            TransactionList(transactionsList, deleteTransaction),
+            if (isLandscape)
+              Row(
+                children: [
+                  const Text(
+                    'Show chart',
+                  ),
+                  Switch(
+                      value: showChart,
+                      onChanged: (val) {
+                        setState(() {
+                          showChart = val;
+                        });
+                      }),
+                ],
+              ),
+            if (!isLandscape)
+              Container(
+                  height: (MediaQuery.of(context).size.height -
+                          appBar.preferredSize.height -
+                          MediaQuery.of(context).padding.top) *
+                      0.3,
+                  child: Chart(transactionsList)),
+            if (!isLandscape) transactionWidget,
+            if (isLandscape)
+              showChart
+                  ? Container(
+                      height: (MediaQuery.of(context).size.height -
+                              appBar.preferredSize.height -
+                              MediaQuery.of(context).padding.top) *
+                          0.7,
+                      child: Chart(transactionsList))
+                  : transactionWidget,
           ],
         ),
       ),
